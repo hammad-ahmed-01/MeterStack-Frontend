@@ -11,10 +11,10 @@ A developer signs up with email and password, then belongs to an organization. I
 Inside an organization they can:
 
 - See a simple overview (product count, active keys, current plan)
-- Create API products — a named service they want MeterStack to manage later
+- Create, edit, and archive API products
 - Issue API keys for `test` or `live`
 - See whether they're on Free or Pro
-- Update org name/slug and their own display name
+- Update the organization name and their own display name
 
 Email is owned by Supabase, so it's read-only in settings.
 
@@ -22,9 +22,9 @@ There is no metering, gateway, or usage billing in this version. Products are ju
 
 ## Domain
 
-**Organization** is the tenant. Everything else hangs off it. The app is built so org switching can be added, but v0.1 assumes one org per user. `GET /organizations/current` returning 404 is how we know to show onboarding.
+**Organization** is the tenant. Everything else hangs off it. The app is built so org switching can be added, but v0.1 assumes one org per user. `GET /organizations/current` returning 404 is how we know to show onboarding. Name can be renamed via `PATCH /organizations/current`; slug is assigned at create.
 
-**Product** is a service the org wants to expose/manage (`Image Generation API`). Name, description, status. Endpoints, routing, and pricing are not here yet.
+**Product** is a service the org wants to expose/manage (`Image Generation API`). Name, description, status. Products can be edited or archived. Endpoints, routing, and pricing are not here yet.
 
 **API key** is a credential for that org. On create, the backend is expected to return the full secret once. The UI shows it in a modal, lets you copy it, then throws it away. After that we only display the prefix. The secret is never written to `localStorage`. Keys can be revoked.
 

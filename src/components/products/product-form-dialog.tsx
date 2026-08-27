@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -17,20 +18,25 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useCreateProduct } from "@/hooks/use-products"
+import { useCreateProduct, useUpdateProduct } from "@/hooks/use-products"
 import { getErrorMessage } from "@/lib/api/errors"
 import { productSchema, type ProductValues } from "@/lib/validation/product"
+import type { Product } from "@/types"
 
-type CreateProductDialogProps = {
+type ProductFormDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  product?: Product | null
 }
 
-export function CreateProductDialog({
+export function ProductFormDialog({
   open,
   onOpenChange,
-}: CreateProductDialogProps) {
+  product,
+}: ProductFormDialogProps) {
+  const isEditing = Boolean(product)
   const createProduct = useCreateProduct()
+  const updateProduct = useUpdateProduct()
   const {
     register,
     handleSubmit,
@@ -41,14 +47,34 @@ export function CreateProductDialog({
     defaultValues: { name: "", description: "" },
   })
 
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    reset({
+      name: product?.name ?? "",
+      description: product?.description ?? "",
+    })
+  }, [open, product, reset])
+
   async function onSubmit(values: ProductValues) {
     try {
-      await createProduct.mutateAsync({
-        name: values.name,
-        description: values.description.trim(),
-      })
-      toast.success("Product created")
-      reset()
+      if (product) {
+        await updateProduct.mutateAsync({
+          id: product.id,
+          name: values.name,
+          description: values.description.trim(),
+        })
+        toast.success("Product updated")
+      } else {
+        await createProduct.mutateAsync({
+          name: values.name,
+          description: values.description.trim(),
+        })
+        toast.success("Product created")
+      }
+
       onOpenChange(false)
     } catch (error) {
       toast.error(getErrorMessage(error))
@@ -60,14 +86,16 @@ export function CreateProductDialog({
       open={open}
       onOpenChange={(nextOpen) => {
         if (!nextOpen) {
-          reset()
+          reset({ name: "", description: "" })
         }
         onOpenChange(nextOpen)
       }}
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create API product</DialogTitle>
+          <DialogTitle>
+            {isEditing ? "Edit API product" : "Create API product"}
+          </DialogTitle>
           <DialogDescription>
             Products represent services you want to manage through MeterStack.
           </DialogDescription>
@@ -99,7 +127,7 @@ export function CreateProductDialog({
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
-              Create product
+              {isEditing ? "Save changes" : "Create product"}
             </Button>
           </DialogFooter>
         </form>

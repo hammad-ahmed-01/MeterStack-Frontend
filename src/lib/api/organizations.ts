@@ -36,11 +36,8 @@ export const organizationsApi = {
     return normalizeOrganization(unwrapData(response.data))
   },
 
-  async update(
-    id: string,
-    input: { name: string; slug: string },
-  ): Promise<Organization> {
-    const response = await api.patch<unknown>(`/organizations/${id}`, input)
+  async update(input: { name: string }): Promise<Organization> {
+    const response = await api.patch<unknown>("/organizations/current", input)
     return normalizeOrganization(unwrapData(response.data))
   },
 }

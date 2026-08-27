@@ -1,6 +1,18 @@
 import { describe, expect, it } from "vitest"
 
-import { organizationSchema } from "./organization"
+import { organizationNameSchema, organizationSchema } from "./organization"
+
+describe("organizationNameSchema", () => {
+  it("accepts a valid name", () => {
+    const result = organizationNameSchema.safeParse({ name: "Acme Labs" })
+    expect(result.success).toBe(true)
+  })
+
+  it("rejects a short name", () => {
+    const result = organizationNameSchema.safeParse({ name: "A" })
+    expect(result.success).toBe(false)
+  })
+})
 
 describe("organizationSchema", () => {
   it("accepts a valid name and slug", () => {

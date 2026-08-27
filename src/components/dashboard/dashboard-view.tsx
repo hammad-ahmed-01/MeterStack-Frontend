@@ -13,7 +13,8 @@ export function DashboardView() {
   const subscription = useSubscription()
   const isLoading = products.isLoading || apiKeys.isLoading || subscription.isLoading
 
-  const productCount = products.data?.length ?? 0
+  const productCount =
+    products.data?.filter((product) => product.status === "active").length ?? 0
   const activeKeyCount =
     apiKeys.data?.filter((key) => key.status === "active").length ?? 0
   const planName = subscription.data?.plan === "pro" ? "Pro" : "Free"

@@ -19,8 +19,8 @@ import { Input } from "@/components/ui/input"
 import { useUpdateOrganization } from "@/hooks/use-organization"
 import { getErrorMessage } from "@/lib/api/errors"
 import {
-  organizationSchema,
-  type OrganizationValues,
+  organizationNameSchema,
+  type OrganizationNameValues,
 } from "@/lib/validation/organization"
 import { useOrganization } from "@/providers/organization-provider"
 
@@ -32,27 +32,22 @@ export function OrganizationSettings() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<OrganizationValues>({
-    resolver: zodResolver(organizationSchema),
+  } = useForm<OrganizationNameValues>({
+    resolver: zodResolver(organizationNameSchema),
     defaultValues: {
       name: organization?.name ?? "",
-      slug: organization?.slug ?? "",
     },
   })
 
   useEffect(() => {
     if (organization) {
-      reset({ name: organization.name, slug: organization.slug })
+      reset({ name: organization.name })
     }
   }, [organization, reset])
 
-  async function onSubmit(values: OrganizationValues) {
-    if (!organization) {
-      return
-    }
-
+  async function onSubmit(values: OrganizationNameValues) {
     try {
-      await updateOrganization.mutateAsync({ id: organization.id, ...values })
+      await updateOrganization.mutateAsync({ name: values.name })
       toast.success("Organization updated")
     } catch (error) {
       toast.error(getErrorMessage(error))
@@ -70,8 +65,12 @@ export function OrganizationSettings() {
           <Field label="Organization name" htmlFor="name" error={errors.name?.message}>
             <Input id="name" aria-invalid={Boolean(errors.name)} {...register("name")} />
           </Field>
-          <Field label="Organization slug" htmlFor="slug" error={errors.slug?.message}>
-            <Input id="slug" aria-invalid={Boolean(errors.slug)} {...register("slug")} />
+          <Field
+            label="Organization slug"
+            htmlFor="slug"
+            hint="Assigned when the organization is created and cannot be changed."
+          >
+            <Input id="slug" value={organization?.slug ?? ""} readOnly disabled />
           </Field>
           <div>
             <Button type="submit" disabled={isSubmitting || !isDirty}>

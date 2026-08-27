@@ -1,10 +1,17 @@
 import { z } from "zod"
 
-export const organizationSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Organization name must be at least 2 characters")
-    .max(80, "Organization name is too long"),
+const organizationNameField = z
+  .string()
+  .min(2, "Organization name must be at least 2 characters")
+  .max(80, "Organization name is too long")
+
+export const organizationNameSchema = z.object({
+  name: organizationNameField,
+})
+
+export type OrganizationNameValues = z.infer<typeof organizationNameSchema>
+
+export const organizationSchema = organizationNameSchema.extend({
   slug: z
     .string()
     .min(3, "Slug must be at least 3 characters")

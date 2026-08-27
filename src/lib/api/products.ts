@@ -27,4 +27,21 @@ export const productsApi = {
     const response = await api.post<unknown>("/products", input)
     return normalizeProduct(unwrapData(response.data))
   },
+
+  async update(
+    id: string,
+    input: {
+      name?: string
+      description?: string
+      status?: ProductStatus
+    },
+  ): Promise<Product> {
+    const response = await api.patch<unknown>(`/products/${id}`, input)
+    return normalizeProduct(unwrapData(response.data))
+  },
+
+  async archive(id: string): Promise<Product> {
+    const response = await api.delete<unknown>(`/products/${id}`)
+    return normalizeProduct(unwrapData(response.data))
+  },
 }

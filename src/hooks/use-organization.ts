@@ -34,14 +34,7 @@ export function useUpdateOrganization() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      id,
-      ...input
-    }: {
-      id: string
-      name: string
-      slug: string
-    }) => organizationsApi.update(id, input),
+    mutationFn: (input: { name: string }) => organizationsApi.update(input),
     onSuccess: (organization: Organization) => {
       queryClient.setQueryData(queryKeys.organization.current, organization)
       void queryClient.invalidateQueries({ queryKey: queryKeys.organization.all })
