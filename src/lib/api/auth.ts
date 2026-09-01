@@ -21,7 +21,6 @@ export const authApi = {
   async updateMe(input: { fullName: string }): Promise<Profile> {
     const response = await api.patch<unknown>("/me", {
       fullName: input.fullName,
-      full_name: input.fullName,
     })
     return normalizeProfile(unwrapData(response.data))
   },

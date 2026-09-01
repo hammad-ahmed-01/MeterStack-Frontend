@@ -6,7 +6,7 @@ The UI lives here. The Express API is a separate repo. Supabase is only used for
 
 ## What a user can do
 
-A developer signs up with email and password, then belongs to an organization. If they don't have one yet, they create it with a name and slug (`Acme Labs` / `acme-labs`) before they can use the dashboard.
+A developer signs up with email and password, then belongs to an organization. If they don't have one yet, they create it with a name (`Acme Labs`); the API assigns the slug.
 
 Inside an organization they can:
 

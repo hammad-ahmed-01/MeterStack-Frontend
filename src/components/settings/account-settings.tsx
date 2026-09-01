@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { authApi } from "@/lib/api/auth"
-import { getErrorMessage, isApiError } from "@/lib/api/errors"
+import { getErrorMessage } from "@/lib/api/errors"
 import { getUserFullName, updateUserFullName } from "@/lib/supabase/auth"
 import { accountSchema, type AccountValues } from "@/lib/validation/settings"
 import { useAuth } from "@/providers/auth-provider"
@@ -37,16 +37,8 @@ export function AccountSettings() {
 
   async function onSubmit(values: AccountValues) {
     try {
+      await authApi.updateMe({ fullName: values.fullName })
       await updateUserFullName(values.fullName)
-
-      try {
-        await authApi.updateMe({ fullName: values.fullName })
-      } catch (error) {
-        if (!(isApiError(error) && (error.status === 404 || error.status === 0))) {
-          throw error
-        }
-      }
-
       toast.success("Account updated")
     } catch (error) {
       toast.error(getErrorMessage(error))

@@ -31,7 +31,7 @@ export const organizationsApi = {
     return unwrapList(response.data).map(normalizeOrganization)
   },
 
-  async create(input: { name: string; slug: string }): Promise<Organization> {
+  async create(input: { name: string }): Promise<Organization> {
     const response = await api.post<unknown>("/organizations", input)
     return normalizeOrganization(unwrapData(response.data))
   },

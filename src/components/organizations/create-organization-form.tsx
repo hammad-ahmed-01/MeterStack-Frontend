@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -12,32 +11,26 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useCreateOrganization } from "@/hooks/use-organization"
 import { getErrorMessage } from "@/lib/api/errors"
-import { slugify } from "@/lib/utils"
 import {
-  organizationSchema,
-  type OrganizationValues,
+  organizationNameSchema,
+  type OrganizationNameValues,
 } from "@/lib/validation/organization"
 
 export function CreateOrganizationForm() {
   const router = useRouter()
   const createOrganization = useCreateOrganization()
-  const [slugLocked, setSlugLocked] = useState(false)
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<OrganizationValues>({
-    resolver: zodResolver(organizationSchema),
-    defaultValues: { name: "", slug: "" },
+  } = useForm<OrganizationNameValues>({
+    resolver: zodResolver(organizationNameSchema),
+    defaultValues: { name: "" },
   })
 
-  const nameField = register("name")
-  const slugField = register("slug")
-
-  async function onSubmit(values: OrganizationValues) {
+  async function onSubmit(values: OrganizationNameValues) {
     try {
-      await createOrganization.mutateAsync(values)
+      await createOrganization.mutateAsync({ name: values.name })
       toast.success("Organization created")
       router.replace("/dashboard")
     } catch (error) {
@@ -51,37 +44,13 @@ export function CreateOrganizationForm() {
         label="Organization name"
         htmlFor="name"
         error={errors.name?.message}
+        hint="A slug is assigned automatically, for example Acme Labs becomes acme-labs."
       >
         <Input
           id="name"
           placeholder="Acme Labs"
           aria-invalid={Boolean(errors.name)}
-          {...nameField}
-          onChange={(event) => {
-            void nameField.onChange(event)
-            if (!slugLocked) {
-              setValue("slug", slugify(event.target.value), {
-                shouldValidate: false,
-              })
-            }
-          }}
-        />
-      </Field>
-      <Field
-        label="Organization slug"
-        htmlFor="slug"
-        error={errors.slug?.message}
-        hint="Used in URLs. Lowercase letters, numbers, and hyphens."
-      >
-        <Input
-          id="slug"
-          placeholder="acme-labs"
-          aria-invalid={Boolean(errors.slug)}
-          {...slugField}
-          onChange={(event) => {
-            setSlugLocked(true)
-            void slugField.onChange(event)
-          }}
+          {...register("name")}
         />
       </Field>
       <Button type="submit" disabled={isSubmitting}>

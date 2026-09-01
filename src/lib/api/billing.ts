@@ -61,12 +61,15 @@ export const billingApi = {
   },
 
   async createCheckoutSession(planId: PlanId = "pro"): Promise<CheckoutSession> {
-    const response = await api.post<unknown>("/billing/checkout", { planId, plan: planId })
+    const response = await api.post<unknown>("/billing/checkout-session", {
+      planId,
+      plan: planId,
+    })
     return { url: normalizeUrl(unwrapData(response.data)) }
   },
 
   async createPortalSession(): Promise<BillingPortalSession> {
-    const response = await api.post<unknown>("/billing/portal")
+    const response = await api.post<unknown>("/billing/customer-portal")
     return { url: normalizeUrl(unwrapData(response.data)) }
   },
 }

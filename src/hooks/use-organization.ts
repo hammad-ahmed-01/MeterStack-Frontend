@@ -21,8 +21,7 @@ export function useCreateOrganization() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (input: { name: string; slug: string }) =>
-      organizationsApi.create(input),
+    mutationFn: (input: { name: string }) => organizationsApi.create(input),
     onSuccess: (organization) => {
       queryClient.setQueryData(queryKeys.organization.current, organization)
       void queryClient.invalidateQueries({ queryKey: queryKeys.organization.all })
