@@ -1,6 +1,7 @@
 "use client"
 
 import { MoreHorizontal, Package, Plus } from "lucide-react"
+import Link from "next/link"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -127,7 +128,11 @@ export function ProductsView() {
             <TableBody>
               {products.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link href={`/products/${product.id}`} className="hover:underline">
+                      {product.name}
+                    </Link>
+                  </TableCell>
                   <TableCell className="max-w-sm truncate text-muted-foreground">
                     {product.description || "—"}
                   </TableCell>
@@ -143,6 +148,9 @@ export function ProductsView() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link href={`/products/${product.id}`}>View</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openEdit(product)}>
                           Edit
                         </DropdownMenuItem>

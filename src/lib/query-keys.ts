@@ -8,6 +8,8 @@ export const queryKeys = {
   products: {
     all: ["products"] as const,
     list: ["products", "list"] as const,
+    detail: (id: string) => ["products", "detail", id] as const,
+    routes: (id: string) => ["products", "routes", id] as const,
   },
   apiKeys: {
     all: ["apiKeys"] as const,

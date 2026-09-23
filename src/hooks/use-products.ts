@@ -7,6 +7,16 @@ import { queryKeys } from "@/lib/query-keys"
 import { useAuth } from "@/providers/auth-provider"
 import type { ProductStatus } from "@/types"
 
+export function useProduct(id: string) {
+  const { isAuthenticated, isLoading } = useAuth()
+
+  return useQuery({
+    queryKey: queryKeys.products.detail(id),
+    queryFn: () => productsApi.get(id),
+    enabled: isAuthenticated && !isLoading && Boolean(id),
+  })
+}
+
 export function useProducts() {
   const { isAuthenticated, isLoading } = useAuth()
 
@@ -41,6 +51,7 @@ export function useUpdateProduct() {
       name?: string
       description?: string
       status?: ProductStatus
+      baseUrl?: string | null
     }) => productsApi.update(id, input),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.products.all })
