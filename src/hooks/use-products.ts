@@ -52,6 +52,8 @@ export function useUpdateProduct() {
       description?: string
       status?: ProductStatus
       baseUrl?: string | null
+      rateLimit?: number | null
+      rateLimitWindowSeconds?: number | null
     }) => productsApi.update(id, input),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.products.all })

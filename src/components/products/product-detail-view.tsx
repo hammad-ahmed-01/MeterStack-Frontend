@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 
 import { ProductBaseUrlForm } from "@/components/products/product-base-url-form"
+import { ProductRateLimitForm } from "@/components/products/product-rate-limit-form"
 import { ProductRoutesSection } from "@/components/products/product-routes-section"
 import { ErrorState } from "@/components/shared/error-state"
 import { PageHeader } from "@/components/shared/page-header"
@@ -44,6 +45,7 @@ export function ProductDetailView() {
             actions={<StatusBadge status={data.status} />}
           />
           <ProductBaseUrlForm product={data} />
+          <ProductRateLimitForm product={data} />
           <ProductRoutesSection productId={data.id} />
         </div>
       ) : null}

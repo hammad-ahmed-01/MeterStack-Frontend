@@ -5,6 +5,18 @@ function normalizeBaseUrl(record: Record<string, unknown>): string | null {
   return pickString(record, "baseUrl", "base_url") ?? null
 }
 
+function pickNumber(record: Record<string, unknown>, ...keys: string[]): number | null {
+  for (const key of keys) {
+    const value = record[key]
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value
+    }
+  }
+
+  return null
+}
+
 function normalizeStatus(value: string | undefined): ProductStatus {
   return value === "archived" ? "archived" : "active"
 }
@@ -17,6 +29,12 @@ function normalizeProduct(value: unknown): Product {
     name: pickString(record, "name") ?? "",
     description: pickString(record, "description") ?? "",
     baseUrl: normalizeBaseUrl(record),
+    rateLimit: pickNumber(record, "rateLimit", "rate_limit"),
+    rateLimitWindowSeconds: pickNumber(
+      record,
+      "rateLimitWindowSeconds",
+      "rate_limit_window_seconds",
+    ),
     status: normalizeStatus(pickString(record, "status")),
     createdAt: pickString(record, "createdAt", "created_at") ?? "",
   }
@@ -45,6 +63,8 @@ export const productsApi = {
       description?: string
       status?: ProductStatus
       baseUrl?: string | null
+      rateLimit?: number | null
+      rateLimitWindowSeconds?: number | null
     },
   ): Promise<Product> {
     const response = await api.patch<unknown>(`/products/${id}`, input)

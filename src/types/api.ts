@@ -30,6 +30,8 @@ export type Product = {
   name: string
   description: string
   baseUrl: string | null
+  rateLimit: number | null
+  rateLimitWindowSeconds: number | null
   status: ProductStatus
   createdAt: string
 }

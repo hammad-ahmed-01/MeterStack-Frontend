@@ -9,3 +9,41 @@ export const productSchema = z.object({
 })
 
 export type ProductValues = z.infer<typeof productSchema>
+
+export const rateLimitWindows = [
+  { value: "60", label: "Per minute" },
+  { value: "3600", label: "Per hour" },
+  { value: "86400", label: "Per day" },
+] as const
+
+export const productRateLimitSchema = z
+  .object({
+    rateLimit: z.string().trim(),
+    windowSeconds: z.enum(["60", "3600", "86400"]),
+  })
+  .superRefine((value, ctx) => {
+    if (value.rateLimit === "") {
+      return
+    }
+
+    if (!/^\d+$/.test(value.rateLimit)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["rateLimit"],
+        message: "Enter a whole number",
+      })
+      return
+    }
+
+    const limit = Number(value.rateLimit)
+
+    if (limit < 1 || limit > 1_000_000) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["rateLimit"],
+        message: "Enter a limit between 1 and 1,000,000",
+      })
+    }
+  })
+
+export type ProductRateLimitValues = z.infer<typeof productRateLimitSchema>
