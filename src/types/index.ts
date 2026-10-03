@@ -13,6 +13,8 @@ export type {
   ProductRouteStatus,
   ProductStatus,
   Profile,
+  RequestLog,
+  RequestStatusClass,
   Subscription,
   SubscriptionStatus,
 } from "./api"

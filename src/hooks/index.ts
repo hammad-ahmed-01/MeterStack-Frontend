@@ -15,5 +15,6 @@ export {
   useDisableProductRoute,
 } from "./use-product-routes"
 export { useApiKeys, useCreateApiKey, useRevokeApiKey } from "./use-api-keys"
+export { useRequestLogs } from "./use-request-logs"
 export { useSubscription, useCheckoutSession, useBillingPortal } from "./use-billing"
 export { useProfile } from "./use-profile"

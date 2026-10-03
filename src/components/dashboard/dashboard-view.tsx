@@ -2,6 +2,7 @@
 
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
 import { GettingStarted } from "@/components/dashboard/getting-started"
+import { RecentRequests } from "@/components/dashboard/recent-requests"
 import { CardsSkeleton } from "@/components/shared/skeletons"
 import { useApiKeys } from "@/hooks/use-api-keys"
 import { useSubscription } from "@/hooks/use-billing"
@@ -36,6 +37,7 @@ export function DashboardView() {
           planName={planName}
         />
       )}
+      <RecentRequests />
       <GettingStarted />
     </div>
   )

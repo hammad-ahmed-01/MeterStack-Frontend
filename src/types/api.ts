@@ -1,6 +1,7 @@
 export type ProductStatus = "active" | "archived"
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 export type ProductRouteStatus = "active" | "disabled"
+export type RequestStatusClass = "2xx" | "4xx" | "5xx"
 export type ApiKeyStatus = "active" | "revoked"
 export type ApiKeyEnvironment = "test" | "live"
 export type PlanId = "free" | "pro"
@@ -43,6 +44,18 @@ export type ProductRoute = {
   path: string
   description: string
   status: ProductRouteStatus
+  createdAt: string
+}
+
+export type RequestLog = {
+  id: string
+  productId: string | null
+  productName: string | null
+  method: string
+  path: string
+  statusCode: number
+  keyPrefix: string | null
+  latencyMs: number
   createdAt: string
 }
 

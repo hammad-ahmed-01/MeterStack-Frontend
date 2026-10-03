@@ -1,4 +1,5 @@
 import {
+  Activity,
   CreditCard,
   KeyRound,
   LayoutDashboard,
@@ -16,6 +17,7 @@ export type NavItem = {
 export const mainNav: NavItem[] = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/products", label: "Products", icon: Package },
+  { href: "/requests", label: "Requests", icon: Activity },
   { href: "/api-keys", label: "API Keys", icon: KeyRound },
   { href: "/billing", label: "Billing", icon: CreditCard },
 ]
@@ -27,6 +29,7 @@ export const organizationNav: NavItem[] = [
 export const protectedPaths = [
   "/dashboard",
   "/products",
+  "/requests",
   "/api-keys",
   "/billing",
   "/settings",

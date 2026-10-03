@@ -11,6 +11,14 @@ export const queryKeys = {
     detail: (id: string) => ["products", "detail", id] as const,
     routes: (id: string) => ["products", "routes", id] as const,
   },
+  requestLogs: {
+    all: ["requestLogs"] as const,
+    list: (filters: {
+      productId?: string
+      statusClass?: string
+      limit?: number
+    }) => ["requestLogs", "list", filters] as const,
+  },
   apiKeys: {
     all: ["apiKeys"] as const,
     list: ["apiKeys", "list"] as const,
