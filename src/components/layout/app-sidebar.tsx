@@ -32,7 +32,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
               href={item.href}
               label={item.label}
               icon={item.icon}
-              active={pathname === item.href}
+              active={pathname === item.href || pathname.startsWith(`${item.href}/`)}
               onNavigate={onNavigate}
             />
           ))}
@@ -47,7 +47,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
               href={item.href}
               label={item.label}
               icon={item.icon}
-              active={pathname === item.href}
+              active={pathname === item.href || pathname.startsWith(`${item.href}/`)}
               onNavigate={onNavigate}
             />
           ))}

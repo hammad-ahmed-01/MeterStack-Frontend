@@ -1,6 +1,6 @@
 # MeterStack
 
-MeterStack is API management and monetization infrastructure for developers. The long-term product covers metering, usage-based billing, webhooks, and observability. This frontend is the first cut of the control plane: accounts, organizations, products, keys, and a billing shell.
+MeterStack is API management and monetization infrastructure for developers. The long-term product covers metering, usage-based billing, webhooks, and observability. This frontend is the control plane: accounts, organizations, products, routes, a stored rate limit, a request log, keys, and a billing shell.
 
 The UI lives here. The Express API is a separate repo. Supabase is only used for authentication. Anything that looks like business data (orgs, products, keys, plans) goes through `NEXT_PUBLIC_API_URL` with the current Supabase access token as `Authorization: Bearer <token>`.
 
@@ -10,23 +10,27 @@ A developer signs up with email and password, then belongs to an organization. I
 
 Inside an organization they can:
 
-- See a simple overview (product count, active keys, current plan)
+- See an overview (product count, active keys, current plan, recent requests)
 - Create, edit, and archive API products
+- Set a product's upstream URL, routes, and a stored rate limit
+- Read the request log (method, path, status, key prefix, latency)
 - Issue API keys for `test` or `live`
 - See whether they're on Free or Pro
 - Update the organization name and their own display name
 
 Email is owned by Supabase, so it's read-only in settings.
 
-There is no metering, gateway, or usage billing in this version. Products are just records. Keys authenticate future traffic; they don't enforce anything yet.
+There is no metering, gateway, or usage billing in this version. A product can store an upstream, routes, and a rate limit. The limit is not enforced, and keys do not authenticate traffic yet. The request log lists rows that have been recorded; nothing writes those rows until a gateway exists.
 
 ## Domain
 
 **Organization** is the tenant. Everything else hangs off it. The app is built so org switching can be added, but v0.1 assumes one org per user. `GET /organizations/current` returning 404 is how we know to show onboarding. Name can be renamed via `PATCH /organizations/current`; slug is assigned at create.
 
-**Product** is a service the org wants to expose/manage (`Image Generation API`). Name, description, status. Products can be edited or archived. Endpoints, routing, and pricing are not here yet.
+**Product** is a service the org wants to expose (`Image Generation API`). Name, description, status, an optional upstream base URL, and an optional rate limit (a request count per minute, hour, or day). Products can be edited or archived. Routes are method and path pairs on that product, and each route can be disabled. Pricing is not here yet. The rate limit is stored for a later gateway to read.
 
 **API key** is a credential for that org. On create, the backend is expected to return the full secret once. The UI shows it in a modal, lets you copy it, then throws it away. After that we only display the prefix. The secret is never written to `localStorage`. Keys can be revoked.
+
+**Request log** is a read-only history for the organization. Each row has a time, product, method, path, status code, key prefix, and latency. The overview shows the latest few. Filters are product and status class (`2xx`, `4xx`, `5xx`).
 
 **Billing** is a placeholder around a current plan. Missing subscription data is treated as Free. Checkout and the Stripe customer portal are wired if those backend routes exist; otherwise the buttons just fail softly.
 
@@ -40,7 +44,7 @@ After login the Axios client pulls the access token from the Supabase session. I
 
 ## Stack
 
-Next.js App Router, TypeScript, Tailwind, shadcn/ui, TanStack Query, React Hook Form, Zod. Server state lives in Query (`organization`, `products`, `apiKeys`, `subscription`). Forms don't keep a second copy of that data.
+Next.js App Router, TypeScript, Tailwind, shadcn/ui, TanStack Query, React Hook Form, Zod. Server state lives in Query (`organization`, `products`, `apiKeys`, `requestLogs`, `subscription`). Forms don't keep a second copy of that data.
 
 The API client in `src/lib/api` unwraps either a raw resource or `{ data: ... }`, and accepts camelCase or snake_case so the backend can settle on one style without blocking the UI.
 

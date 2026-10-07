@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, KeyRound, Package, Plug } from "lucide-react"
+import { Activity, ArrowRight, KeyRound, Package } from "lucide-react"
 import Link from "next/link"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,9 +17,9 @@ const steps = [
     icon: KeyRound,
   },
   {
-    title: "Configure your application",
-    href: "/settings",
-    icon: Plug,
+    title: "Review request history",
+    href: "/requests",
+    icon: Activity,
   },
 ]
 

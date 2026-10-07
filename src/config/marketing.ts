@@ -17,7 +17,13 @@ export const currentCapabilities = [
   },
   {
     title: "API products",
-    description: "Named services you intend to manage. Records only — no routing yet.",
+    description:
+      "An upstream URL, routes, and a stored rate limit for each API. The limit is saved and not enforced yet.",
+  },
+  {
+    title: "Request log",
+    description:
+      "A history of recorded calls: method, path, status, key prefix, and latency.",
   },
   {
     title: "API key management",
@@ -32,7 +38,8 @@ export const currentCapabilities = [
 export const plannedCapabilities = [
   {
     title: "API gateway",
-    description: "Authenticate traffic, route requests, and enforce quotas.",
+    description:
+      "Authenticate live traffic, proxy it to the upstream, and enforce the stored rate limit.",
   },
   {
     title: "Usage metering",
@@ -49,11 +56,14 @@ export const directionStages = [
     title: "SaaS Foundation",
     status: "Current",
     summary:
-      "The control plane as it exists today: accounts, orgs, products, keys, and a Stripe subscription shell.",
+      "The control plane as it exists today: accounts, orgs, products with routes and a stored rate limit, keys, a request log, and a Stripe subscription shell.",
     items: [
       "Authentication",
       "Organizations",
       "API products",
+      "Product routes",
+      "Stored rate limits",
+      "Request log",
       "API keys",
       "Stripe subscription foundation",
     ],
@@ -62,13 +72,12 @@ export const directionStages = [
     title: "API Gateway",
     status: "Planned",
     summary:
-      "Sit in front of customer APIs: authenticate keys, route requests, and enforce limits. Not implemented.",
+      "Sit in front of customer APIs: authenticate keys, proxy requests to the upstream, enforce the stored limit, and write the request log. Not implemented.",
     items: [
       "API key authentication",
-      "Request routing",
-      "Quotas",
-      "Rate limiting",
-      "Request tracking",
+      "Proxy to the upstream",
+      "Enforce stored rate limits",
+      "Write request logs",
     ],
   },
   {

@@ -97,7 +97,7 @@ export function ProductFormDialog({
             {isEditing ? "Edit API product" : "Create API product"}
           </DialogTitle>
           <DialogDescription>
-            Products represent services you want to manage through MeterStack.
+            Name the API here. The upstream URL, routes, and rate limit are set on the product page.
           </DialogDescription>
         </DialogHeader>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
