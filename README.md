@@ -20,7 +20,7 @@ Inside an organization they can:
 
 Email is owned by Supabase, so it's read-only in settings.
 
-There is no metering, gateway, or usage billing in this version. A product can store an upstream, routes, and a rate limit. The limit is not enforced, and keys do not authenticate traffic yet. The request log lists rows that have been recorded; nothing writes those rows until a gateway exists.
+There is no metering or usage billing in this version. A product can store an upstream, routes, and a rate limit. The limit is not enforced. The API gateway accepts an active key and does not proxy the request, so the request log stays empty until a later step writes rows.
 
 ## Domain
 
